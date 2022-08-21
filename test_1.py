@@ -12,7 +12,6 @@ def test_basic_search(driver):
     count_pages_number(driver)
 
 
-
 if __name__ == '__main__':
     driver_object = setup()
     try:

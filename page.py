@@ -2,7 +2,6 @@ import time
 
 from selenium.webdriver.chrome import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
 
 
 def setup():
