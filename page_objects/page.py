@@ -1,6 +1,6 @@
 import time
 
-from locators import *
+from locators.locators import *
 
 
 class HabrBase:
