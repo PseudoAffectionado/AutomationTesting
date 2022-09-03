@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 # Common locators
 last_page_locator = By.XPATH, '(//*[@class="tm-pagination__page"])[last()]'
 article_locator = By.XPATH, '//*[@data-test-id="articleTitle"]/../..'
-search_button_locator = By.CLASS_NAME, 'tm-header-user-menu__search'
+search_button_locator = By.XPATH, '//*[@data-test-id="search-button"]'
 
 # Main Page
 

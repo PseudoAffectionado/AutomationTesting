@@ -1,5 +1,8 @@
 import time
 
+from selenium.webdriver.support.expected_conditions import *
+from selenium.webdriver.support.wait import WebDriverWait
+
 from locators.locators import *
 
 
@@ -63,7 +66,12 @@ class SearchPage(HabrBase):
     def search(self, search_text):
         self.search_input.send_keys(search_text)
         self.search_button.click()
-        time.sleep(1)
+
+        self.wait_results_or_empty()
+
+    def wait_results_or_empty(self):
+        wait = WebDriverWait(self.webdriver, 10)
+        wait.until(any_of(presence_of_element_located(article_locator), presence_of_element_located(empty_res_locator)))
 
     @property
     def empty_result_banner(self):
@@ -71,3 +79,15 @@ class SearchPage(HabrBase):
 
     def get_empty_page_text(self):
         return self.empty_result_banner.text
+
+    def wait_full_page(self):
+        wait = WebDriverWait(self.webdriver, 2, poll_frequency=0.1)
+
+        wait.until(visibility_of_element_located(search_input_locator))
+
+    def open(self):
+        super().open()
+        self.wait_full_page()
+
+    def is_page_shown(self):
+        return self.search_input.is_displaced()
