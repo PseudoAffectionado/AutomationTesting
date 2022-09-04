@@ -49,6 +49,15 @@ class MainPage(HabrBase):
 
         return SearchPage(self.webdriver)
 
+    def wait_full_page(self):
+        wait = WebDriverWait(self.webdriver, 5, poll_frequency=0.1)
+
+        wait.until(presence_of_element_located(article_locator))
+
+    def open(self):
+        super().open()
+        self.wait_full_page()
+
 
 class SearchPage(HabrBase):
     url = 'https://habr.com/ru/search'
@@ -88,4 +97,4 @@ class SearchPage(HabrBase):
         self.wait_full_page()
 
     def is_page_shown(self):
-        return self.search_input.is_displaced()
+        return self.search_input.is_displayed()
