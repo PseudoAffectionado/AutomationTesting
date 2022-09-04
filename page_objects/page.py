@@ -1,5 +1,3 @@
-import time
-
 from selenium.webdriver.support.expected_conditions import *
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -45,9 +43,9 @@ class MainPage(HabrBase):
         return self.webdriver.find_element(*search_button_locator)
 
     def click_search(self):
-        time.sleep(1)
         self.search_button.click()
-        time.sleep(1)
+        page = SearchPage(self.webdriver)
+        page.wait_full_page()
 
         return SearchPage(self.webdriver)
 
@@ -70,7 +68,7 @@ class SearchPage(HabrBase):
         self.wait_results_or_empty()
 
     def wait_results_or_empty(self):
-        wait = WebDriverWait(self.webdriver, 10)
+        wait = WebDriverWait(self.webdriver, 2, poll_frequency=0.1)
         wait.until(any_of(presence_of_element_located(article_locator), presence_of_element_located(empty_res_locator)))
 
     @property
