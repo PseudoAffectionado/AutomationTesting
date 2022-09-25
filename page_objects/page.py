@@ -1,13 +1,15 @@
 import time
 
+from selenium.webdriver.remote.webdriver import WebDriver
+
 from locators.locators import *
 
 
 class HabrBase:
     url = 'https://habr.com'
 
-    def __init__(self, webdriver):
-        self.webdriver = webdriver
+    def __init__(self, webdriver: WebDriver):
+        self.webdriver: WebDriver = webdriver
 
     @property
     def last_page_number(self):
@@ -33,9 +35,17 @@ class HabrBase:
     def open(self):
         self.webdriver.get(self.url)
 
+    def focus_on_new_tab(self):
+
 
 class MainPage(HabrBase):
     url = 'https://habr.com'
+
+    # services list
+    HABR = 0
+    QNA = 1
+    CAREER = 2
+    FL = 3
 
     @property
     def search_button(self):
@@ -47,6 +57,22 @@ class MainPage(HabrBase):
         time.sleep(1)
 
         return SearchPage(self.webdriver)
+
+    def click_services_dropdown(self):
+        element = self.webdriver.find_element(*services_dropdown_button)
+        element.click()
+
+    @property
+    def services(self):
+        return self.webdriver.find_elements(*services_dropdown_element)
+
+    def click_external_service(self, service_index):
+        assert service_index in (self.HABR, self.QNA, self.CAREER, self.FL)
+
+        element = self.services[service_index]
+        element.click()
+        self.focus_on_new_tab()
+        return CareerPage(self.webdriver)
 
 
 class SearchPage(HabrBase):
@@ -74,3 +100,7 @@ class SearchPage(HabrBase):
 
     def get_empty_page_text(self):
         return self.empty_result_banner.text
+
+
+class CareerPage(HabrBase):
+    url = 'https://career.habr.com/'
