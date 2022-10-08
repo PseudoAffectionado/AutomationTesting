@@ -1,11 +1,15 @@
 import time
 
+from selenium.webdriver.remote.webdriver import WebDriver
+
 from locators.locators import *
 
 
 class HabrBase:
-    def __init__(self, webdriver):
-        self.webdriver = webdriver
+    url = 'https://habr.com'
+
+    def __init__(self, webdriver: WebDriver):
+        self.webdriver: WebDriver = webdriver
 
     @property
     def last_page_number(self):
@@ -28,12 +32,24 @@ class HabrBase:
     def current_url(self):
         return self.webdriver.current_url
 
+    def open(self):
+        self.webdriver.get(self.url)
+
+    def focus_on_new_tab(self):
+        driver = self.webdriver
+        tabs = driver.window_handles
+        current_tab = driver.current_window_handle
+        new_index = tabs.index(current_tab) + 1
+        driver.switch_to.window(tabs[new_index])
 
 class MainPage(HabrBase):
     url = 'https://habr.com'
 
-    def open(self):
-        self.webdriver.get(self.url)
+    # services list
+    HABR = 0
+    QNA = 1
+    CAREER = 2
+    FL = 3
 
     @property
     def search_button(self):
@@ -44,10 +60,34 @@ class MainPage(HabrBase):
         self.search_button.click()
         time.sleep(1)
 
-        return SearchResultsPage(self.webdriver)
+        return SearchPage(self.webdriver)
+
+    def click_services_dropdown(self):
+        element = self.webdriver.find_element(*services_dropdown_button)
+        element.click()
+
+    @property
+    def services(self):
+        return self.webdriver.find_elements(*services_dropdown_element)
+
+    def click_external_service(self, service_index):
+        assert service_index in (self.HABR, self.QNA, self.CAREER, self.FL)
+
+        service_pages_map = {
+            self.HABR: MainPage,
+            self.QNA: QNAPage,
+            self.CAREER: CareerPage,
+            self.FL: FLPage
+        }
+
+        element = self.services[service_index]
+        element.click()
+        self.focus_on_new_tab()
+        page_class = service_pages_map.get(service_index)
+        return page_class(self.webdriver)
 
 
-class SearchResultsPage(HabrBase):
+class SearchPage(HabrBase):
     url = 'https://habr.com/ru/search'
 
     @property
@@ -63,9 +103,24 @@ class SearchResultsPage(HabrBase):
         self.search_button.click()
         time.sleep(1)
 
+    def is_page_shown(self):
+        return self.search_input.is_displayed()
+
     @property
     def empty_result_banner(self):
         return self.webdriver.find_element(*empty_res_locator)
 
     def get_empty_page_text(self):
         return self.empty_result_banner.text
+
+
+class CareerPage(HabrBase):
+    url = 'https://career.habr.com/'
+
+
+class QNAPage(HabrBase):
+    url = 'https://qna.habr.com'
+
+
+class FLPage(HabrBase):
+    url = 'https://freelance.habr.com'
