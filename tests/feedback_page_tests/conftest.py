@@ -1,4 +1,5 @@
 import pytest
+from page_objects.feedback_page import FeedbackPage
 
 
 @pytest.fixture(scope='function')
