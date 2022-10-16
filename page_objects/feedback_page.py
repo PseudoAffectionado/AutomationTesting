@@ -1,6 +1,9 @@
 from locators.locators import submit_button, email_error, message_error, agreement_error, subject_option, subject
 from page_objects.base_page import HabrBase
+from selenium.webdriver.support.expected_conditions import presence_of_element_located
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.wait import WebDriverWait
+
 
 class FeedbackPage(HabrBase):
     url = 'https://habr.com/ru/feedback/'
@@ -32,3 +35,9 @@ class FeedbackPage(HabrBase):
 
     def change_subject_by_index(self, index=1):
         self.subject.select_by_index(index)
+
+    def wait_full_page(self):
+        wait = WebDriverWait(self.webdriver, 5)
+        wait.until(
+            presence_of_element_located(subject)
+        )
