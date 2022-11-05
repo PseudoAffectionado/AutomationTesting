@@ -51,3 +51,7 @@ class SearchPage(HabrBase):
 
     def is_page_shown(self):
         return self.search_input.is_displayed()
+
+
+class TopYearlyPage(HabrBase):
+    url = 'https://habr.com/ru/top/yearly/'

@@ -8,6 +8,12 @@ search_button_locator = By.CLASS_NAME, 'tm-header-user-menu__search'
 # Main Page
 services_dropdown_button = By.CLASS_NAME, 'tm-header__dropdown-toggle'
 services_dropdown_element = By.CLASS_NAME, 'tm-our-projects__item'
+navigation_dropdown_button = By.XPATH, '//*[contains(@data-test-id, "nav-filters-button")]'
+navigation_dropdown_show = By.XPATH, '//*[contains(@class, "tm-navigation-filters__option")]' \
+                                     '//*[contains(text(), "Лучшие")]'
+navigation_dropdown_period = By.XPATH, '//*[contains(@class, "tm-navigation-filters__option")]' \
+                                       '//*[contains(text(), "Год")]'
+navigation_apply_button = By.XPATH, '//*[contains(@data-test-id, "nav-filters-apply")]'
 
 # Search Page
 search_icon_locator = By.CSS_SELECTOR, 'span.tm-search__icon'
