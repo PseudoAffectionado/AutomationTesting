@@ -27,3 +27,14 @@ def test_list_of_other_services(page):
     actual = len(page.services)
 
     assert actual == expected
+
+
+def test_nav_button_click(page):
+    page.click_nav_button()
+    page.click_nav_options()
+    page.click_apply_button()
+
+    expected = 'https://habr.com/ru/top/yearly/'
+    actual = page.current_url
+
+    assert actual == expected
